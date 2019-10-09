@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>To-Do List</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        background-color: black;
+      }
+      #header {
+        background-color: blue;
+        color: white;
+        border: 1px solid white;
+      }
+      h1 {
+        pointer-events: none;
+      }
+      #addPlus {
+        padding: 2px;
+        right: 0;
+        top: 0;
+        height: 100%;
+        min-width: 10%;
+        cursor: pointer;
+      }
+      #addBox {
+        display: none;
+      }
+      ul {
+        margin-left: 0;
+        padding-left: 0;
+        position: relative;
+      }
+      li {
+        line-height: 40px;
+        /*padding: 1.3em;*/
+      }
+      li span {
+        color: white;
+        display: none;
+        background-color: red;
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+      }
+      /* :before ve :after jquery ile manipule edilemiyor, baska bir yol bulmak lazim
+      li:before {
+        content: "\f00d"; /* FontAwesome Unicode */
+      /* font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        display: inline-block;
+        margin-left: -1.3em; /* same as padding-left set on li */
+      /*  width: 1.3em; /* same as padding-left set on li */
+      /*  color: red;
+        visibility: hidden;
+      }*/
+
+      .strike {
+        text-decoration: line-through;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="container h-100 w-100 d-flex flex-column align-items-center justify-content-center mt-5"
+    >
+      <div class="w-50">
+        <div id="header" class="w-100 position-relative">
+          <h1 class="text-center mb-1">To-Do List</h1>
+          <div id="addPlus" class="position-absolute">
+            <i class="fas fa-plus fa-3x"></i>
+          </div>
+        </div>
+        <div id="addBox">
+          <div class="input-group">
+            <input
+              id="addItem"
+              type="text"
+              class="form-control"
+              placeholder="Add item"
+              aria-label="Add item"
+              aria-describedby="add-item"
+            />
+            <div class="input-group-append">
+              <button
+                id="addBtn"
+                class="btn btn-outline-secondary btn-success text-white"
+                type="button"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="items" class="w-100 bg-white pl-3 pr-0 my-auto">
+          <ul id="liste" class="list-unstyled mb-0"></ul>
+        </div>
+        <div id="clearBtns" class="row w-100 ml-0 pt-0">
+          <button id="clearStrikes" class="btn btn-warning w-50">
+            Clear Completed
+          </button>
+          <button id="clearAll" class="btn btn-danger w-50">Clear All</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../odev/jquery.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <!--Font Awesome JS-->
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.1.1/js/all.js"
+      integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a"
+      crossorigin="anonymous"
+    ></script>
+    <!--jQuery in this page-->
+    <script>
+      $(document).ready(function() {
+        var addItemFunc = function() {
+          $("ul").append(
+            `<li>${addItem.value}<span class="px-3"><i class="fas fa-times"></i></span></li>`
+          );
+        };
+        $("#addPlus").click(function() {
+          $("#addBox").slideToggle();
+          if ($("#addBox").css("display") !== "none") {
+            $("#addItem").focus();
+          }
+        });
+        $("#addBtn").click(function() {
+          addItemFunc();
+          $("input").val("");
+          $("#addItem").focus();
+        });
+        $("#addItem").keypress(function(e) {
+          if (e.which === 13) {
+            addItemFunc();
+            $("input").val("");
+          }
+        });
+        $("#liste").on("click", "li", function() {
+          $(this).toggleClass("strike");
+        });
+        $("#clearStrikes").click(function() {
+          $("ul li.strike").remove();
+        });
+        $("#clearAll").click(function() {
+          $("ul").empty();
+        });
+        $("ul").on("mouseover", "li", function() {
+          $(this)
+            .css("font-weight", "bold")
+            .find("span")
+            .show();
+        });
+        $("ul").on("mouseout", "li", function() {
+          $(this)
+            .css("font-weight", "")
+            .find("span")
+            .hide();
+        });
+        $("ul").on("click", "span", function() {
+          $(this)
+            .parent()
+            .remove();
+        });
+      });
+    </script>
+  </body>
+</html>
